@@ -4,7 +4,7 @@ import { useEffect } from "react";
 const schedule = require("node-schedule");
 
 const Table = () => {
-  //Token Values
+  //Token Prices in Uniswap (u) and Sushiswap (s)
   const [uBTC, setUBTC] = useState(0);
   const [sBTC, setSBTC] = useState(0);
   const [uETH, setUETH] = useState(0);
