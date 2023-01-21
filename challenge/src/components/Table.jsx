@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useEffect } from "react";
 const schedule = require("node-schedule");
 
 const Table = () => {
+  //Token Prices in Uniswap (u) and Sushiswap (s)
   const [uBTC, setUBTC] = useState(0);
   const [sBTC, setSBTC] = useState(0);
   const [uETH, setUETH] = useState(0);
@@ -10,13 +12,25 @@ const Table = () => {
   const [uAVE, setUAVE] = useState(0);
   const [sAVE, setSAVE] = useState(0);
 
+  //Arbitrage Opportunity
+  const [BTC, setBTC] = useState("");
+  const [ETH, setETH] = useState("");
+  const [AVE, setAVE] = useState("");
+
+  //Updating Prices every 30 secs
   schedule.scheduleJob("*/30 * * * * *", function () {
-    return getPrices()
+    getPrices();
+    checkOpportunity();
   });
 
-  const getPrices = async () => {
-    //Obtains prices from Uniswap and Sushiswap using 1Inch API
+  //First Render
+  useEffect(() => {
+    getPrices();
+    checkOpportunity();
+  }, []);
 
+  //Obtaining Prices
+  const getPrices = async () => {
     //1. USDC/wBTC
     const u_USDC_WBTC = await axios
       .get(
@@ -55,8 +69,37 @@ const Table = () => {
       .then((response) => setSAVE(response.data.toTokenAmount));
   };
 
+  //Checking Arbitrage Opportunity
+  const checkOpportunity = async () => {
+    if (uBTC < sBTC) {
+      setBTC("uniswap");
+    } else if (uBTC > sBTC) {
+      setBTC("sushiswap");
+    } else {
+      setBTC("No Opportunity");
+    }
+    if (uETH < sETH) {
+      setETH("uniswap");
+    } else if (uETH > sETH) {
+      setETH("sushiswap");
+    } else {
+      setETH("No Opportunity");
+    }
+    if (uAVE < sAVE) {
+      setAVE("uniswap");
+    } else if (uAVE > sAVE) {
+      setAVE("sushiswap");
+    } else {
+      setAVE("No Opportunity");
+    }
+  };
 
-  return <button onClick={getPrices}></button>;
+  const mainFunction = async () => {
+    const first = await getPrices();
+    const second = await checkOpportunity();
+  };
+
+  return <button onClick={mainFunction}>ARBITRAGE</button>;
 };
 
 export default Table;
