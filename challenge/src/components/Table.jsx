@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import axios from "axios";
+const schedule = require("node-schedule");
 
 const Table = () => {
-
   const [uBTC, setUBTC] = useState(0);
   const [sBTC, setSBTC] = useState(0);
   const [uETH, setUETH] = useState(0);
   const [sETH, setSETH] = useState(0);
   const [uAVE, setUAVE] = useState(0);
   const [sAVE, setSAVE] = useState(0);
+
+  schedule.scheduleJob("*/30 * * * * *", function () {
+    return getPrices()
+  });
 
   const getPrices = async () => {
     //Obtains prices from Uniswap and Sushiswap using 1Inch API
