@@ -1,15 +1,13 @@
-import logo from './logo.svg';
-import './App.css';
-import Table from './components/Table';
-
+import Navbar from "./components/Navbar";
+import TabTokens from "./commons/Tabs.jsx";
+import { ChakraProvider } from "@chakra-ui/react";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <Table></Table>
-      </header>
-    </div>
+    <ChakraProvider>
+      <Navbar />
+      <TabTokens />
+    </ChakraProvider>
   );
 }
 
