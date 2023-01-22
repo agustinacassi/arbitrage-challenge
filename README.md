@@ -38,7 +38,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This is a criptoarbitrage website created for the Full Stack Developer test.
+This is a criptoarbitrage website created for a Full Stack Developer test.
 
 This website:
 
