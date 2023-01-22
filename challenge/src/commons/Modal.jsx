@@ -18,7 +18,7 @@ function AlertModal({ dexA, dexB }) {
 
   return (
     <>
-      <Button onClick={onOpen}>ARBITRAR</Button>
+      <Button colorScheme="green" onClick={onOpen}>ARBITRAR</Button>
       <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -46,7 +46,7 @@ function AlertModal({ dexA, dexB }) {
               Cerrar
             </Button>
             {success === false ? (
-              <Button onClick={() => setSuccess(true)} colorScheme="blue">
+              <Button onClick={() => setSuccess(true)} colorScheme="orange">
                 Arbitrar
               </Button>
             ) : (

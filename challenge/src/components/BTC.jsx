@@ -11,6 +11,8 @@ import {
   TableCaption,
   TableContainer,
   Text,
+  Spinner,
+  Box,
 } from "@chakra-ui/react";
 import AlertModal from "../commons/Modal";
 const schedule = require("node-schedule");
@@ -97,7 +99,9 @@ const PriceTable = () => {
                 <Td>UNISWAP</Td>
                 <Td isNumeric>{uBTC / 1000000} USDC</Td>
                 <Td>
-                  <Text>Checking prices. Please wait...</Text>
+                  <Text>
+                    <Spinner /> Obteniendo precios. Por favor espere...
+                  </Text>
                 </Td>
               </Tr>
             )}
