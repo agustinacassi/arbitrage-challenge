@@ -9,7 +9,8 @@ import {
   Th,
   Td,
   TableCaption,
-  TableContainer
+  TableContainer,
+  Text
 } from "@chakra-ui/react";
 import AlertModal from "../commons/Modal";
 const schedule = require("node-schedule");
@@ -20,33 +21,26 @@ const PriceTable = () => {
   const [sAVE, setSAVE] = useState(0);
 
   //Arbitrage Opportunity
-  const [AVE, setAVE] = useState("");
+  const [AVE, setAVE] = useState("No Opportunity");
 
   //Updating Prices every 30 secs
-  // schedule.scheduleJob("*/30 * * * * *", function () {
-  //   getPrices();
-  //   checkOpportunity();
-  // });
+  schedule.scheduleJob("*/30 * * * * *", function () {
+    getPrices();
+    checkOpportunity();
+  });
 
   //First Render
   useEffect(() => {
-    getPrices();
     checkOpportunity();
-  }, []);
+  }, [uAVE]);
 
   //Obtaining Prices
   const getPrices = async () => {
     //3. USDC/AAVE
-    const u_USDC_AAVE = await axios
-      .get(
-        "https://api.1inch.io/v5.0/1/quote?fromTokenAddress=0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9&toTokenAddress=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&amount=1000000000000000000&protocols=UNISWAP_V3"
-      )
-      .then((response) => setUAVE(response.data.toTokenAmount));
-    const s_USDC_AAVE = await axios
-      .get(
-        "https://api.1inch.io/v5.0/1/quote?fromTokenAddress=0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9&toTokenAddress=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&amount=1000000000000000000&protocols=SUSHI"
-      )
-      .then((response) => setSAVE(response.data.toTokenAmount));
+    const u_USDC_AAVE = await axios.get(process.env.REACT_APP_u_USDC_AAVE);
+    setUAVE(Number(u_USDC_AAVE.data.toTokenAmount));
+    const s_USDC_AAVE = await axios.get(process.env.REACT_APP_s_USDC_AAVE);
+    setSAVE(Number(s_USDC_AAVE.data.toTokenAmount));
   };
 
   //Checking Arbitrage Opportunity
@@ -59,7 +53,6 @@ const PriceTable = () => {
       setAVE("No Opportunity");
     }
   };
-
 
   return (
     <>
@@ -76,15 +69,37 @@ const PriceTable = () => {
             </Tr>
           </Thead>
           <Tbody>
-            <Tr>
-              <Td>UNISWAPb</Td>
-              <Td isNumeric>25.4</Td>
-              <Td>SUSHISWAP</Td>
-              <Td isNumeric>25.4</Td>
-              <Td>
-                <AlertModal />
-              </Td>
-            </Tr>
+            {AVE === "uniswap" ? (
+              <Tr>
+                <Td>UNISWAP</Td>
+                <Td isNumeric>{uAVE / 1000000} USDC</Td>
+                <Td>SUSHISWAP</Td>
+                <Td isNumeric>{sAVE / 1000000} USDC</Td>
+                <Td>
+                  <AlertModal />
+                </Td>
+              </Tr>
+            ) : AVE === "sushiswap" ? (
+              <Tr>
+                <Td>SUSHISWAP</Td>
+                <Td isNumeric>{sAVE / 1000000} USDC</Td>
+                <Td>UNISWAP</Td>
+                <Td isNumeric>{uAVE / 1000000} USDC</Td>
+                <Td>
+                  <AlertModal dexA={uAVE} dexB={sAVE} />
+                </Td>
+              </Tr>
+            ) : (
+              <Tr>
+                <Td>SUSHISWAP</Td>
+                <Td isNumeric>{sAVE / 1000000} USDC</Td>
+                <Td>UNISWAP</Td>
+                <Td isNumeric>{uAVE / 1000000} USDC</Td>
+                <Td>
+                  <Text>Checking prices. Please wait...</Text>
+                </Td>
+              </Tr>
+            )}
           </Tbody>
         </Table>
       </TableContainer>
