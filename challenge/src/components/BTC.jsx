@@ -24,7 +24,7 @@ const PriceTable = () => {
   const [BTC, setBTC] = useState("No Opportunity");
 
   //   Updating Prices every 30 secs
-  schedule.scheduleJob("*/10 * * * * *", function () {
+  schedule.scheduleJob("*/30 * * * * *", function () {
     getPrices();
     checkOpportunity();
   });

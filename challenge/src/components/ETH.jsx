@@ -9,7 +9,8 @@ import {
   Th,
   Td,
   TableCaption,
-  TableContainer
+  TableContainer,
+  Text,
 } from "@chakra-ui/react";
 import AlertModal from "../commons/Modal";
 const schedule = require("node-schedule");
@@ -20,35 +21,26 @@ const PriceTable = () => {
   const [sETH, setSETH] = useState(0);
 
   //Arbitrage Opportunity
-  const [ETH, setETH] = useState("");
+  const [ETH, setETH] = useState("No Opportunity");
 
-  //Updating Prices every 30 secs
-//   schedule.scheduleJob("*/30 * * * * *", function () {
-//     getPrices();
-//     checkOpportunity();
-//   });
+  // Updating Prices every 30 secs
+    schedule.scheduleJob("*/30 * * * * *", function () {
+      getPrices();
+      checkOpportunity();
+    });
 
   //First Render
   useEffect(() => {
-    getPrices();
     checkOpportunity();
-  }, []);
+  }, [uETH]);
 
   //Obtaining Prices
   const getPrices = async () => {
-
     //2. USDC/ETH
-    const u_USDC_ETH = await axios
-      .get(
-        "https://api.1inch.io/v5.0/1/quote?fromTokenAddress=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee&toTokenAddress=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&amount=1000000000000000000&protocols=UNISWAP_V3"
-      )
-      .then((response) => setUETH(response.data.toTokenAmount));
-    const s_USDC_ETH = await axios
-      .get(
-        "https://api.1inch.io/v5.0/1/quote?fromTokenAddress=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee&toTokenAddress=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&amount=1000000000000000000&protocols=SUSHI"
-      )
-      .then((response) => setSETH(response.data.toTokenAmount));
-
+    const u_USDC_ETH = await axios.get(process.env.REACT_APP_u_USDC_ETH);
+    setUETH(Number(u_USDC_ETH.data.toTokenAmount));
+    const s_USDC_ETH = await axios.get(process.env.REACT_APP_s_USDC_ETH);
+    setSETH(Number(s_USDC_ETH.data.toTokenAmount));
   };
 
   //Checking Arbitrage Opportunity
@@ -61,8 +53,6 @@ const PriceTable = () => {
       setETH("No Opportunity");
     }
   };
-
-
 
   return (
     <>
@@ -79,15 +69,37 @@ const PriceTable = () => {
             </Tr>
           </Thead>
           <Tbody>
-            <Tr>
-              <Td>UNISWAPc</Td>
-              <Td isNumeric>25.4</Td>
-              <Td>SUSHISWAP</Td>
-              <Td isNumeric>25.4</Td>
-              <Td>
-                <AlertModal />
-              </Td>
-            </Tr>
+            {ETH === "uniswap" ? (
+              <Tr>
+                <Td>UNISWAP</Td>
+                <Td isNumeric>{uETH / 1000000} USDC</Td>
+                <Td>SUSHISWAP</Td>
+                <Td isNumeric>{sETH / 1000000} USDC</Td>
+                <Td>
+                  <AlertModal />
+                </Td>
+              </Tr>
+            ) : ETH === "sushiswap" ? (
+              <Tr>
+                <Td>SUSHISWAP</Td>
+                <Td isNumeric>{sETH / 1000000} USDC</Td>
+                <Td>UNISWAP</Td>
+                <Td isNumeric>{uETH / 1000000} USDC</Td>
+                <Td>
+                  <AlertModal dexA={uETH} dexB={sETH} />
+                </Td>
+              </Tr>
+            ) : (
+              <Tr>
+                <Td>SUSHISWAP</Td>
+                <Td isNumeric>{sETH / 1000000} USDC</Td>
+                <Td>UNISWAP</Td>
+                <Td isNumeric>{uETH / 1000000} USDC</Td>
+                <Td>
+                  <Text>Checking prices. Please wait...</Text>
+                </Td>
+              </Tr>
+            )}
           </Tbody>
         </Table>
       </TableContainer>
