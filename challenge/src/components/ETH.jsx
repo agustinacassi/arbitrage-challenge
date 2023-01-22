@@ -11,6 +11,7 @@ import {
   TableCaption,
   TableContainer,
   Text,
+  Spinner,
 } from "@chakra-ui/react";
 import AlertModal from "../commons/Modal";
 const schedule = require("node-schedule");
@@ -24,10 +25,10 @@ const PriceTable = () => {
   const [ETH, setETH] = useState("No Opportunity");
 
   // Updating Prices every 30 secs
-    schedule.scheduleJob("*/30 * * * * *", function () {
-      getPrices();
-      checkOpportunity();
-    });
+  schedule.scheduleJob("*/30 * * * * *", function () {
+    getPrices();
+    checkOpportunity();
+  });
 
   //First Render
   useEffect(() => {
@@ -96,7 +97,9 @@ const PriceTable = () => {
                 <Td>UNISWAP</Td>
                 <Td isNumeric>{uETH / 1000000} USDC</Td>
                 <Td>
-                  <Text>Checking prices. Please wait...</Text>
+                  <Text>
+                    <Spinner /> Obteniendo precios. Por favor espere...
+                  </Text>
                 </Td>
               </Tr>
             )}

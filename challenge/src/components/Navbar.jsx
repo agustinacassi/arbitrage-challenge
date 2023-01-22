@@ -77,7 +77,7 @@ export default function Nav() {
       <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
         <Flex h={16} alignItems={"center"} justifyContent={"flex-end"}>
           {active ? (
-            <Tag colorScheme="green" borderRadius="full">
+            <Tag colorScheme="orange" borderRadius="full">
               <TagLabel>
                 <Text>{truncatedAddress}</Text>
               </TagLabel>
@@ -97,7 +97,7 @@ export default function Nav() {
           ) : (
             <Button
               variant={"solid"}
-              colorScheme={"green"}
+              colorScheme={"orange"}
               size={"sm"}
               onClick={connect}
               disabled={isUnsupportedChain}
