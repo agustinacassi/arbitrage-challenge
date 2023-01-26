@@ -38,14 +38,13 @@ const PricesTable = () => {
   });
 
   //Variable created to detect changes in price and opportunity values to re-render table
-  const [changing, setChanging] = useState(false);
+  const [render, setRender] = useState(true);
 
   // Updating Prices every 30 secs
   schedule.scheduleJob("*/30 * * * * *", async () => {
-    setChanging(true);
+    setRender(false)
     const price = await getPrices();
     const opp = checkOpportunity();
-    setChanging(false);
   });
 
   //Obtaining Prices and setting values in opportunity state
@@ -125,6 +124,7 @@ const PricesTable = () => {
         opportunity[assetName] = dexes[1];
       }
     }
+    setRender(true)
   }
 
   return (
@@ -142,153 +142,128 @@ const PricesTable = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {changing === false ? (
-              selectedTab === "ETH" && opportunity.ETH === "uniswap" ? (
-                <Tr>
-                  <Td>UNISWAP</Td>
-                  <Td isNumeric>{prices.uETH / 1000000} USDC</Td>
-                  <Td>SUSHISWAP</Td>
-                  <Td isNumeric>{prices.sETH / 1000000} USDC</Td>
-                  <Td>
-                    <AlertModal dexA={prices.uETH} dexB={prices.sETH} />
-                  </Td>
-                </Tr>
-              ) : selectedTab === "ETH" && opportunity.ETH === "sushiswap" ? (
-                <Tr>
-                  <Td>SUSHISWAP</Td>
-                  <Td isNumeric>{prices.sETH / 1000000} USDC</Td>
-                  <Td>UNISWAP</Td>
-                  <Td isNumeric>{prices.uETH / 1000000} USDC</Td>
-                  <Td>
-                    <AlertModal dexA={prices.sETH} dexB={prices.uETH} />
-                  </Td>
-                </Tr>
-              ) : selectedTab === "ETH" &&
-                opportunity.ETH ===
-                  "No se pudo completar la consulta. Intenta otra vez en unos minutos." ? (
-                <Tr>
-                  <Td>SUSHISWAP</Td>
-                  <Td isNumeric>{prices.sBTC} USDC</Td>
-                  <Td>UNISWAP</Td>
-                  <Td isNumeric>{prices.uBTC} USDC</Td>
-                  <Td>
-                    <Text>{opportunity.ETH}</Text>
-                  </Td>
-                </Tr>
-              ) : selectedTab === "ETH" && opportunity.ETH === "undefined" ? (
-                <Tr>
-                  <Td>SUSHISWAP</Td>
-                  <Td isNumeric>{prices.sETH} USDC</Td>
-                  <Td>UNISWAP</Td>
-                  <Td isNumeric>{prices.uETH} USDC</Td>
-                  <Td>
-                    <Text>
-                      <Spinner /> Obteniendo precios. Por favor espere...
-                    </Text>
-                  </Td>
-                </Tr>
-              ) : selectedTab === "AAVE" && opportunity.AAVE === "uniswap" ? (
-                <Tr>
-                  <Td>UNISWAP</Td>
-                  <Td isNumeric>{prices.uAAVE / 1000000} USDC</Td>
-                  <Td>SUSHISWAP</Td>
-                  <Td isNumeric>{prices.sAAVE / 1000000} USDC</Td>
-                  <Td>
-                    <AlertModal dexA={prices.uAAVE} dexB={prices.sAAVE} />
-                  </Td>
-                </Tr>
-              ) : selectedTab === "AAVE" && opportunity.AAVE === "sushiswap" ? (
-                <Tr>
-                  <Td>SUSHISWAP</Td>
-                  <Td isNumeric>{prices.sAAVE / 1000000} USDC</Td>
-                  <Td>UNISWAP</Td>
-                  <Td isNumeric>{prices.uAAVE / 1000000} USDC</Td>
-                  <Td>
-                    <AlertModal dexA={prices.sAAVE} dexB={prices.uAAVE} />
-                  </Td>
-                </Tr>
-              ) : selectedTab === "AAVE" &&
-                opportunity.AAVE ===
-                  "No se pudo completar la consulta. Intenta otra vez en unos minutos." ? (
-                <Tr>
-                  <Td>SUSHISWAP</Td>
-                  <Td isNumeric>{prices.uAAVE} USDC</Td>
-                  <Td>UNISWAP</Td>
-                  <Td isNumeric>{prices.sAAVE} USDC</Td>
-                  <Td>
-                    <Text>{opportunity.AAVE}</Text>
-                  </Td>
-                </Tr>
-              ) : selectedTab === "AAVE" && opportunity.AAVE === "undefined" ? (
-                <Tr>
-                  <Td>SUSHISWAP</Td>
-                  <Td isNumeric>{prices.sAAVE} USDC</Td>
-                  <Td>UNISWAP</Td>
-                  <Td isNumeric>{prices.uAAVE} USDC</Td>
-                  <Td>
-                    <Text>
-                      <Spinner /> Obteniendo precios. Por favor espere...
-                    </Text>
-                  </Td>
-                </Tr>
-              ) : selectedTab === "BTC" && opportunity.WBTC === "uniswap" ? (
-                <Tr>
-                  <Td>UNISWAP</Td>
-                  <Td isNumeric>{prices.uBTC / 1000000} USDC</Td>
-                  <Td>SUSHISWAP</Td>
-                  <Td isNumeric>{prices.sBTC / 1000000} USDC</Td>
-                  <Td>
-                    <AlertModal />
-                  </Td>
-                </Tr>
-              ) : selectedTab === "BTC" && opportunity.WBTC === "sushiswap" ? (
-                <Tr>
-                  <Td>SUSHISWAP</Td>
-                  <Td isNumeric>{prices.sBTC / 1000000} USDC</Td>
-                  <Td>UNISWAP</Td>
-                  <Td isNumeric>{prices.uBTC / 1000000} USDC</Td>
-                  <Td>
-                    <AlertModal dexA={prices.sBTC} dexB={prices.uBTC} />
-                  </Td>
-                </Tr>
-              ) : selectedTab === "BTC" &&
-                opportunity.WBTC ===
-                  "No se pudo completar la consulta. Intenta otra vez en unos minutos." ? (
-                <Tr>
-                  <Td>SUSHISWAP</Td>
-                  <Td isNumeric>{prices.sBTC} USDC</Td>
-                  <Td>UNISWAP</Td>
-                  <Td isNumeric>{prices.uBTC} USDC</Td>
-                  <Td>
-                    <Text>{opportunity.WBTC}</Text>
-                  </Td>
-                </Tr>
-              ) : selectedTab === "BTC" && opportunity.WBTC === "undefined" ? (
-                <Tr>
-                  <Td>SUSHISWAP</Td>
-                  <Td isNumeric>{prices.sBTC} USDC</Td>
-                  <Td>UNISWAP</Td>
-                  <Td isNumeric>{prices.uBTC} USDC</Td>
-                  <Td>
-                    <Text>
-                      <Spinner /> Obteniendo precios. Por favor espere...
-                    </Text>
-                  </Td>
-                </Tr>
-              ) : (
-                <Tr>
-                  <Td>SUSHISWAP</Td>
-                  <Td isNumeric>{prices.sBTC} USDC</Td>
-                  <Td>UNISWAP</Td>
-                  <Td isNumeric>{prices.uBTC} USDC</Td>
-                  <Td>
-                    <Text>
-                      <Spinner /> Obteniendo precios. Por favor espere...
-                    </Text>
-                  </Td>
-                </Tr>
-              )
-            ) : (
+            { render ?  
+            selectedTab === "ETH" && opportunity.ETH === "uniswap" ? (
+              <Tr>
+                <Td>UNISWAP</Td>
+                <Td isNumeric>{prices.uETH / 1000000} USDC</Td>
+                <Td>SUSHISWAP</Td>
+                <Td isNumeric>{prices.sETH / 1000000} USDC</Td>
+                <Td>
+                  <AlertModal dexA={prices.uETH} dexB={prices.sETH} />
+                </Td>
+              </Tr>
+            ) : selectedTab === "ETH" && opportunity.ETH === "sushiswap" ? (
+              <Tr>
+                <Td>SUSHISWAP</Td>
+                <Td isNumeric>{prices.sETH / 1000000} USDC</Td>
+                <Td>UNISWAP</Td>
+                <Td isNumeric>{prices.uETH / 1000000} USDC</Td>
+                <Td>
+                  <AlertModal dexA={prices.sETH} dexB={prices.uETH} />
+                </Td>
+              </Tr>
+            ) : selectedTab === "ETH" &&
+              opportunity.ETH ===
+                "No se pudo completar la consulta. Intenta otra vez en unos minutos." ? (
+              <Tr>
+                <Td>SUSHISWAP</Td>
+                <Td isNumeric>{prices.sBTC} USDC</Td>
+                <Td>UNISWAP</Td>
+                <Td isNumeric>{prices.uBTC} USDC</Td>
+                <Td>
+                  <Text>{opportunity.ETH}</Text>
+                </Td>
+              </Tr>
+            ) : selectedTab === "ETH" && opportunity.ETH === "undefined" ? (
+              <Tr>
+                <Td>SUSHISWAP</Td>
+                <Td isNumeric>{prices.sETH} USDC</Td>
+                <Td>UNISWAP</Td>
+                <Td isNumeric>{prices.uETH} USDC</Td>
+                <Td>
+                  <Text>
+                    <Spinner /> Obteniendo precios. Por favor espere...
+                  </Text>
+                </Td>
+              </Tr>
+            ) : selectedTab === "AAVE" && opportunity.AAVE === "uniswap" ? (
+              <Tr>
+                <Td>UNISWAP</Td>
+                <Td isNumeric>{prices.uAAVE / 1000000} USDC</Td>
+                <Td>SUSHISWAP</Td>
+                <Td isNumeric>{prices.sAAVE / 1000000} USDC</Td>
+                <Td>
+                  <AlertModal dexA={prices.uAAVE} dexB={prices.sAAVE} />
+                </Td>
+              </Tr>
+            ) : selectedTab === "AAVE" && opportunity.AAVE === "sushiswap" ? (
+              <Tr>
+                <Td>SUSHISWAP</Td>
+                <Td isNumeric>{prices.sAAVE / 1000000} USDC</Td>
+                <Td>UNISWAP</Td>
+                <Td isNumeric>{prices.uAAVE / 1000000} USDC</Td>
+                <Td>
+                  <AlertModal dexA={prices.sAAVE} dexB={prices.uAAVE} />
+                </Td>
+              </Tr>
+            ) : selectedTab === "AAVE" &&
+              opportunity.AAVE ===
+                "No se pudo completar la consulta. Intenta otra vez en unos minutos." ? (
+              <Tr>
+                <Td>SUSHISWAP</Td>
+                <Td isNumeric>{prices.uAAVE} USDC</Td>
+                <Td>UNISWAP</Td>
+                <Td isNumeric>{prices.sAAVE} USDC</Td>
+                <Td>
+                  <Text>{opportunity.AAVE}</Text>
+                </Td>
+              </Tr>
+            ) : selectedTab === "AAVE" && opportunity.AAVE === "undefined" ? (
+              <Tr>
+                <Td>SUSHISWAP</Td>
+                <Td isNumeric>{prices.sAAVE} USDC</Td>
+                <Td>UNISWAP</Td>
+                <Td isNumeric>{prices.uAAVE} USDC</Td>
+                <Td>
+                  <Text>
+                    <Spinner /> Obteniendo precios. Por favor espere...
+                  </Text>
+                </Td>
+              </Tr>
+            ) : selectedTab === "BTC" && opportunity.WBTC === "uniswap" ? (
+              <Tr>
+                <Td>UNISWAP</Td>
+                <Td isNumeric>{prices.uBTC / 1000000} USDC</Td>
+                <Td>SUSHISWAP</Td>
+                <Td isNumeric>{prices.sBTC / 1000000} USDC</Td>
+                <Td>
+                  <AlertModal />
+                </Td>
+              </Tr>
+            ) : selectedTab === "BTC" && opportunity.WBTC === "sushiswap" ? (
+              <Tr>
+                <Td>SUSHISWAP</Td>
+                <Td isNumeric>{prices.sBTC / 1000000} USDC</Td>
+                <Td>UNISWAP</Td>
+                <Td isNumeric>{prices.uBTC / 1000000} USDC</Td>
+                <Td>
+                  <AlertModal dexA={prices.sBTC} dexB={prices.uBTC} />
+                </Td>
+              </Tr>
+            ) : selectedTab === "BTC" &&
+              opportunity.WBTC ===
+                "No se pudo completar la consulta. Intenta otra vez en unos minutos." ? (
+              <Tr>
+                <Td>SUSHISWAP</Td>
+                <Td isNumeric>{prices.sBTC} USDC</Td>
+                <Td>UNISWAP</Td>
+                <Td isNumeric>{prices.uBTC} USDC</Td>
+                <Td>
+                  <Text>{opportunity.WBTC}</Text>
+                </Td>
+              </Tr>
+            ) : selectedTab === "BTC" && opportunity.WBTC === "undefined" ? (
               <Tr>
                 <Td>SUSHISWAP</Td>
                 <Td isNumeric>{prices.sBTC} USDC</Td>
@@ -300,7 +275,34 @@ const PricesTable = () => {
                   </Text>
                 </Td>
               </Tr>
-            )}
+            ) : (
+              <Tr>
+                <Td>1</Td>
+                <Td>SUSHISWAP</Td>
+                <Td isNumeric>0 USDC</Td>
+                <Td>UNISWAP</Td>
+                <Td isNumeric>0 USDC</Td>
+                <Td>
+                  <Text>
+                    <Spinner /> Obteniendo precios. Por favor espere...
+                  </Text>
+                </Td>
+              </Tr>
+            )
+            :
+            <Tr>
+            <Td>2</Td>
+            <Td>SUSHISWAP</Td>
+            <Td isNumeric>0 USDC</Td>
+            <Td>UNISWAP</Td>
+            <Td isNumeric>0 USDC</Td>
+            <Td>
+              <Text>
+                <Spinner /> Obteniendo precios. Por favor espere...
+              </Text>
+            </Td>
+          </Tr>
+            }
           </Tbody>
         </Table>
       </TableContainer>
