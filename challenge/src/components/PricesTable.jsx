@@ -277,7 +277,6 @@ const PricesTable = () => {
               </Tr>
             ) : (
               <Tr>
-                <Td>1</Td>
                 <Td>SUSHISWAP</Td>
                 <Td isNumeric>0 USDC</Td>
                 <Td>UNISWAP</Td>
@@ -291,7 +290,6 @@ const PricesTable = () => {
             )
             :
             <Tr>
-            <Td>2</Td>
             <Td>SUSHISWAP</Td>
             <Td isNumeric>0 USDC</Td>
             <Td>UNISWAP</Td>
