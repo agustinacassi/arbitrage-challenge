@@ -1,42 +1,54 @@
-import { Tabs, Tab, TabList, TabPanels, TabPanel } from "@chakra-ui/react";
-import BTC from "../components/BTC";
-import AAVE from "../components/AAVE";
-import ETH from "../components/ETH";
+import {
+  Tabs,
+  Tab,
+  TabList,
+  TabPanels,
+  TabPanel
+} from "@chakra-ui/react";
+import PricesTable from "../components/PricesTable";
 import { Text, Box } from "@chakra-ui/react";
-
-import React from "react";
+import React, { useContext } from "react";
+import { TabContext } from "../contexts/TabContext";
 
 const TabTokens = () => {
+  //Obtaining Tab Context
+  const { selection } = useContext(TabContext);
+
   return (
     <div>
       <Box>
         <Text fontSize="xl">Tablas comparativas.</Text>
       </Box>
       <Box>
-        <Text fontSize="xl">Precios ofrecidos en los exchanges Uniswap y Sushiswap.</Text>
+        <Text fontSize="xl">
+          Precios ofrecidos en los exchanges Uniswap y Sushiswap.
+        </Text>
+        <Text fontSize="xl" as='em'>
+          Conecte su wallet y utilice la red Göerli para operar. Otras redes no son soportadas.
+        </Text>
       </Box>
       <br></br>
       <Tabs isFitted variant="enclosed" colorScheme={"orange"}>
         <TabList mb="1em">
-          <Tab>
+          <Tab value={"wBTC"} onClick={(e) => selection(e.target.value)}>
             <b>wBTC</b>
           </Tab>
-          <Tab>
+          <Tab value={"ETH"} onClick={(e) => selection(e.target.value)}>
             <b>ETH</b>
           </Tab>
-          <Tab>
+          <Tab value={"AAVE"} onClick={(e) => selection(e.target.value)}>
             <b>AAVE</b>
           </Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
-            <BTC />
+            <PricesTable />
           </TabPanel>
           <TabPanel>
-            <ETH />
+            <PricesTable />
           </TabPanel>
           <TabPanel>
-            <AAVE />
+            <PricesTable />
           </TabPanel>
         </TabPanels>
       </Tabs>
