@@ -41,7 +41,7 @@ const PricesTable = () => {
   const [changing, setChanging] = useState(false);
 
   // Updating Prices every 30 secs
-  schedule.scheduleJob("*/10 * * * * *", async () => {
+  schedule.scheduleJob("*/30 * * * * *", async () => {
     setChanging(true);
     const price = await getPrices();
     const opp = checkOpportunity();
