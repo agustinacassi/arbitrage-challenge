@@ -85,6 +85,9 @@ To run this app you need have installed:
    $ npm run start
    ```
 
+### Other details
+* Ethereum Testnet: Goerli
+
 
 <!-- CONTACT -->
 ## Contact
