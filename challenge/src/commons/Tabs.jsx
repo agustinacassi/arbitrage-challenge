@@ -30,7 +30,7 @@ const TabTokens = () => {
       <br></br>
       <Tabs isFitted variant="enclosed" colorScheme={"orange"}>
         <TabList mb="1em">
-          <Tab value={"wBTC"} onClick={(e) => selection(e.target.value)}>
+          <Tab value={"BTC"} onClick={(e) => selection(e.target.value)}>
             <b>wBTC</b>
           </Tab>
           <Tab value={"ETH"} onClick={(e) => selection(e.target.value)}>
