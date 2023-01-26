@@ -86,7 +86,7 @@ To run this app you need have installed:
    ```
 
 ### Other details
-* Ethereum Testnet: Goerli
+* Ethereum Testnet: Göerli
 
 
 <!-- CONTACT -->
